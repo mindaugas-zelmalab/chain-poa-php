@@ -9,8 +9,10 @@ namespace ForwardBlock\Chain\PoA\Transactions;
  */
 interface TxFlagsInterface
 {
-    /** @var int */
+    /** @var int Genesis/Chain Initializer Transaction */
+    public const TX_FLAG_GENESIS = 0x01;
+    /** @var int Account Registration Transaction */
     public const TX_FLAG_REGISTER = 0x64;
-    /** @var int */
+    /** @var int Account to Account transfer op */
     public const TX_FLAG_TRANSFER = 0xc8;
 }

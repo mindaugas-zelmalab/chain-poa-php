@@ -7,6 +7,7 @@ use ForwardBlock\Chain\PoA\Transactions\TxFactory;
 use ForwardBlock\Chain\PoA\Transactions\TxFlag;
 use ForwardBlock\Chain\PoA\Transactions\TxFlagsInterface;
 use ForwardBlock\Protocol\AbstractProtocolChain;
+use ForwardBlock\Protocol\ProtocolConstants;
 use ForwardBlock\Protocol\Transactions\TxFlags;
 
 /**
@@ -15,6 +16,9 @@ use ForwardBlock\Protocol\Transactions\TxFlags;
  */
 class ForwardPoA extends AbstractProtocolChain implements TxFlagsInterface
 {
+    /** @var string */
+    public const CORE_PROTOCOL_NAMESPACE = 'ForwardBlock\Blockchain\Shared\Protocol';
+
     /** @var TxFactory */
     private TxFactory $txF;
 
@@ -34,6 +38,9 @@ class ForwardPoA extends AbstractProtocolChain implements TxFlagsInterface
      */
     protected function registerTxFlags(TxFlags $flags): void
     {
+        // TX: GENESIS
+        $flags->append($this->createTxFlag(ProtocolConstants::GENESIS_TX_FLAG, "GENESIS", true));
+
         // TX: REGISTER
         $flags->append($this->createTxFlag(self::TX_FLAG_REGISTER, "REGISTER", true));
     }

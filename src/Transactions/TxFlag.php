@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace ForwardBlock\Chain\PoA\Transactions;
 
 use Comely\Utils\OOP\OOP;
+use ForwardBlock\Chain\PoA\ForwardPoA;
 use ForwardBlock\Protocol\AbstractProtocolChain;
 use ForwardBlock\Protocol\Transactions\AbstractTxConstructor;
 use ForwardBlock\Protocol\Transactions\AbstractTxFlag;
@@ -40,7 +41,7 @@ class TxFlag extends AbstractTxFlag
         }
 
         // Receipt TX class
-        $this->receiptClass = sprintf('ForwardBlock\Chain\PoA\Transactions\Flags\%sReceipt', $pascalCase);
+        $this->receiptClass = sprintf(ForwardPoA::CORE_PROTOCOL_NAMESPACE . '\Txs\%sReceipt', $pascalCase);
         if (!class_exists($this->receiptClass)) {
             throw new \UnexpectedValueException('Cannot find "%s" tx receipt class');
         }
