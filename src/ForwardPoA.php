@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ForwardBlock\Chain\PoA;
 
+use ForwardBlock\Chain\PoA\Transactions\LedgerEntryFlags;
 use ForwardBlock\Chain\PoA\Transactions\TxFactory;
 use ForwardBlock\Chain\PoA\Transactions\TxFlag;
 use ForwardBlock\Chain\PoA\Transactions\TxFlagsInterface;
@@ -14,7 +15,7 @@ use ForwardBlock\Protocol\Transactions\TxFlags;
  * Class ForwardPoA
  * @package ForwardBlock\Chain\PoA
  */
-class ForwardPoA extends AbstractProtocolChain implements TxFlagsInterface
+class ForwardPoA extends AbstractProtocolChain implements TxFlagsInterface, LedgerEntryFlags
 {
     /** @var string */
     public const CORE_PROTOCOL_NAMESPACE = 'ForwardBlock\Blockchain\Shared\Protocol';
