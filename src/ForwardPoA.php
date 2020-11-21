@@ -7,7 +7,6 @@ use ForwardBlock\Chain\PoA\Transactions\TxFactory;
 use ForwardBlock\Chain\PoA\Transactions\TxFlag;
 use ForwardBlock\Chain\PoA\Transactions\TxFlagsInterface;
 use ForwardBlock\Protocol\AbstractProtocolChain;
-use ForwardBlock\Protocol\Transactions\AbstractTxFactory;
 use ForwardBlock\Protocol\Transactions\TxFlags;
 
 /**
@@ -16,6 +15,20 @@ use ForwardBlock\Protocol\Transactions\TxFlags;
  */
 class ForwardPoA extends AbstractProtocolChain implements TxFlagsInterface
 {
+    /** @var TxFactory */
+    private TxFactory $txF;
+
+    /**
+     * ForwardPoA constructor.
+     * @param array $config
+     * @throws \ForwardBlock\Protocol\Exception\ProtocolConfigException
+     */
+    public function __construct(array $config)
+    {
+        parent::__construct($config);
+        $this->txF = new TxFactory($this);
+    }
+
     /**
      * @param TxFlags $flags
      */
@@ -26,11 +39,11 @@ class ForwardPoA extends AbstractProtocolChain implements TxFlagsInterface
     }
 
     /**
-     * @return AbstractTxFactory
+     * @return TxFactory
      */
-    protected function createTxFactory(): AbstractTxFactory
+    public function txFactory(): TxFactory
     {
-        return new TxFactory($this);
+        return $this->txF;
     }
 
     /**
@@ -39,7 +52,7 @@ class ForwardPoA extends AbstractProtocolChain implements TxFlagsInterface
      * @param bool $enabled
      * @return TxFlag
      */
-    final protected function createTxFlag(int $dec, string $name, bool $enabled): TxFlag
+    private function createTxFlag(int $dec, string $name, bool $enabled): TxFlag
     {
         return new TxFlag($this, $dec, $name, $enabled);
     }
