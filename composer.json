@@ -1,0 +1,32 @@
+{
+  "name": "forwardblock-io/chain-poa-php",
+  "description": "ForwardBlock-PoA Chain Components PHP",
+  "type": "library",
+  "homepage": "https://github.com/forwardblock-io/chain-poa-php",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Furqan A. Siddiqui",
+      "email": "hello@furqansiddiqui.com",
+      "homepage": "https://www.furqansiddiqui.com",
+      "role": "Author"
+    }
+  ],
+  "require": {
+    "php-64bit": "^7.4",
+    "ext-openssl": "*",
+    "ext-gmp": "*",
+    "ext-bcmath": "*",
+    "ext-curl": "*",
+    "ext-json": "*",
+    "forwardblock-io/protocol-php": "dev-master#ab751ed"
+  },
+  "autoload": {
+    "psr-4": {
+      "ForwardBlock\\Chain\\PoA\\": [
+        "src"
+      ]
+    }
+  },
+  "minimum-stability": "dev"
+}
