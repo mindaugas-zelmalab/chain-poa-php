@@ -19,8 +19,6 @@ class TxFlag extends AbstractTxFlag
 {
     /** @var string */
     private string $createClass;
-    /** @var string */
-    private string $receiptClass;
 
     /**
      * TxFlag constructor.
@@ -38,12 +36,6 @@ class TxFlag extends AbstractTxFlag
         $this->createClass = sprintf('ForwardBlock\Chain\PoA\Transactions\Flags\%sTx', $pascalCase);
         if (!class_exists($this->createClass)) {
             throw new \UnexpectedValueException('Cannot find "%s" tx create class');
-        }
-
-        // Receipt TX class
-        $this->receiptClass = sprintf(ForwardPoA::CORE_PROTOCOL_NAMESPACE . '\Txs\%sReceipt', $pascalCase);
-        if (!class_exists($this->receiptClass)) {
-            throw new \UnexpectedValueException('Cannot find "%s" tx receipt class');
         }
     }
 
@@ -63,7 +55,11 @@ class TxFlag extends AbstractTxFlag
      */
     public function receipt(Transaction $tx): AbstractTxReceipt
     {
-        $receiptClass = $this->receiptClass;
-        return new $receiptClass($this->p, $tx);
+        $receiptClass = sprintf(ForwardPoA::CORE_PROTOCOL_NAMESPACE . '\Txs\%sReceipt', OOP::PascalCase($this->name));
+        if (!class_exists($receiptClass)) {
+            throw new \UnexpectedValueException('Cannot find "%s" tx receipt class');
+        }
+
+        return new $receiptClass($tx);
     }
 }
