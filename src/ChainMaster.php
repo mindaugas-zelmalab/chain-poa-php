@@ -3,11 +3,15 @@ declare(strict_types=1);
 
 namespace ForwardBlock\Chain\PoA;
 
+use Comely\DataTypes\Buffer\Base16;
+use ForwardBlock\Protocol\AbstractProtocolChain;
+use ForwardBlock\Protocol\KeyPair\PublicKey;
+
 /**
  * Class ChainMaster
  * @package ForwardBlock\Chain\PoA
  */
-class ChainMaster
+class ChainMaster extends PublicKey
 {
     /** @var string ChainMaster Account Public Key */
     public const PUBLIC_KEY = "03053c689577b88cfc61279963e17d83025028b400b38ccaa0b14536733205566b";
@@ -23,4 +27,76 @@ class ChainMaster
     public const MULTI_SIG_KEY_5 = "0213f57c39a0abc589134ac5bf16225168a2b76de267a896f9a70b2571c5534dd8";
     /** @var int Initial Supply 100,000,000 */
     public const INITIAL_SUPPLY = 10000000000000000;
+
+    /** @var array */
+    private array $multiSigPubs = [];
+
+    /**
+     * ChainMaster constructor.
+     * @param AbstractProtocolChain $p
+     * @throws \FurqanSiddiqui\BIP32\Exception\PublicKeyException
+     */
+    public function __construct(AbstractProtocolChain $p)
+    {
+        parent::__construct($p, null, $p->secp256k1(), new Base16(static::PUBLIC_KEY), true);
+    }
+
+    /**
+     * @return PublicKey
+     * @throws \FurqanSiddiqui\BIP32\Exception\PublicKeyException
+     */
+    public function getMultiSig1(): PublicKey
+    {
+        return $this->getSignatory(1);
+    }
+
+    /**
+     * @return PublicKey
+     * @throws \FurqanSiddiqui\BIP32\Exception\PublicKeyException
+     */
+    public function getMultiSig2(): PublicKey
+    {
+        return $this->getSignatory(2);
+    }
+
+    /**
+     * @return PublicKey
+     * @throws \FurqanSiddiqui\BIP32\Exception\PublicKeyException
+     */
+    public function getMultiSig3(): PublicKey
+    {
+        return $this->getSignatory(3);
+    }
+
+    /**
+     * @return PublicKey
+     * @throws \FurqanSiddiqui\BIP32\Exception\PublicKeyException
+     */
+    public function getMultiSig4(): PublicKey
+    {
+        return $this->getSignatory(4);
+    }
+
+    /**
+     * @return PublicKey
+     * @throws \FurqanSiddiqui\BIP32\Exception\PublicKeyException
+     */
+    public function getMultiSig5(): PublicKey
+    {
+        return $this->getSignatory(5);
+    }
+
+    /**
+     * @param int $num
+     * @return PublicKey
+     * @throws \FurqanSiddiqui\BIP32\Exception\PublicKeyException
+     */
+    private function getSignatory(int $num): PublicKey
+    {
+        if (!isset($this->multiSigPubs[$num])) {
+            $this->multiSigPubs[$num] = new PublicKey($this->protocol, null, $this->protocol->secp256k1(), new Base16(constant("static::MULTI_SIG_KEY_" . $num)));
+        }
+
+        return $this->multiSigPubs[$num];
+    }
 }

@@ -22,6 +22,8 @@ class ForwardPoA extends AbstractProtocolChain implements TxFlagsInterface, Ledg
 
     /** @var TxFactory */
     private TxFactory $txF;
+    /** @var ChainMaster|null */
+    private ?ChainMaster $chainMaster = null;
 
     /**
      * ForwardPoA constructor.
@@ -32,6 +34,19 @@ class ForwardPoA extends AbstractProtocolChain implements TxFlagsInterface, Ledg
     {
         parent::__construct($config);
         $this->txF = new TxFactory($this);
+    }
+
+    /**
+     * @return ChainMaster
+     * @throws \FurqanSiddiqui\BIP32\Exception\PublicKeyException
+     */
+    public function chainMaster(): ChainMaster
+    {
+        if (!$this->chainMaster) {
+            $this->chainMaster = new ChainMaster($this);
+        }
+
+        return $this->chainMaster;
     }
 
     /**
