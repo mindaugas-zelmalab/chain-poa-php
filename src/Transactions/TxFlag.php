@@ -51,15 +51,16 @@ class TxFlag extends AbstractTxFlag
 
     /**
      * @param Transaction $tx
+     * @param int $blockHeightContext
      * @return AbstractTxReceipt
      */
-    public function receipt(Transaction $tx): AbstractTxReceipt
+    public function receipt(Transaction $tx, int $blockHeightContext): AbstractTxReceipt
     {
         $receiptClass = sprintf(ForwardPoA::CORE_PROTOCOL_NAMESPACE . '\Txs\%sReceipt', OOP::PascalCase($this->name));
         if (!class_exists($receiptClass)) {
             throw new \UnexpectedValueException('Cannot find "%s" tx receipt class');
         }
 
-        return new $receiptClass($tx);
+        return new $receiptClass($this->p, $tx, $blockHeightContext);
     }
 }
