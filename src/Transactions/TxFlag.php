@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ForwardBlock\Chain\PoA\Transactions;
 
+use Comely\DataTypes\Buffer\Binary;
 use Comely\Utils\OOP\OOP;
 use ForwardBlock\Chain\PoA\ForwardPoA;
 use ForwardBlock\Protocol\AbstractProtocolChain;
@@ -54,7 +55,7 @@ class TxFlag extends AbstractTxFlag
      * @param int $blockHeightContext
      * @return AbstractTxReceipt
      */
-    public function receipt(Transaction $tx, int $blockHeightContext): AbstractTxReceipt
+    public function newReceipt(Transaction $tx, int $blockHeightContext): AbstractTxReceipt
     {
         $receiptClass = sprintf(ForwardPoA::CORE_PROTOCOL_NAMESPACE . '\Txs\%sReceipt', OOP::PascalCase($this->name));
         if (!class_exists($receiptClass)) {
@@ -62,5 +63,21 @@ class TxFlag extends AbstractTxFlag
         }
 
         return new $receiptClass($this->p, $tx, $blockHeightContext);
+    }
+
+    /**
+     * @param Transaction $tx
+     * @param Binary $bytes
+     * @param int $blockHeightContext
+     * @return AbstractTxReceipt
+     */
+    public function decodeReceipt(Transaction $tx, Binary $bytes, int $blockHeightContext): AbstractTxReceipt
+    {
+        $receiptClass = sprintf(ForwardPoA::CORE_PROTOCOL_NAMESPACE . '\Txs\%sReceipt', OOP::PascalCase($this->name));
+        if (!class_exists($receiptClass)) {
+            throw new \UnexpectedValueException('Cannot find "%s" tx receipt class');
+        }
+
+        return call_user_func_array([$receiptClass, "Decode"], [$this->p, $tx, $blockHeightContext, $bytes]);
     }
 }
