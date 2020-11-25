@@ -5,13 +5,15 @@ namespace ForwardBlock\Chain\PoA;
 
 use Comely\DataTypes\Buffer\Base16;
 use ForwardBlock\Protocol\AbstractProtocolChain;
+use ForwardBlock\Protocol\Accounts\ChainAccountInterface;
 use ForwardBlock\Protocol\KeyPair\PublicKey;
+use FurqanSiddiqui\BIP32\Exception\PublicKeyException;
 
 /**
  * Class ChainMaster
  * @package ForwardBlock\Chain\PoA
  */
-class ChainMaster extends PublicKey
+class ChainMaster extends PublicKey implements ChainAccountInterface
 {
     /** @var string ChainMaster Account Public Key */
     public const PUBLIC_KEY = "03053c689577b88cfc61279963e17d83025028b400b38ccaa0b14536733205566b";
@@ -39,6 +41,36 @@ class ChainMaster extends PublicKey
     public function __construct(AbstractProtocolChain $p)
     {
         parent::__construct($p, null, $p->secp256k1(), new Base16(static::PUBLIC_KEY), true);
+    }
+
+    /**
+     * @return int
+     */
+    public function initialSupply(): int
+    {
+        return self::INITIAL_SUPPLY;
+    }
+
+    /**
+     * @return bool
+     */
+    public function canForgeBlocks(): bool
+    {
+        return true;
+    }
+
+    /**
+     * @return array
+     * @throws PublicKeyException
+     */
+    public function getAllPublicKeys(): array
+    {
+        $pubKeys = [];
+        for ($i = 1; $i <= 5; $i++) {
+            $pubKeys[] = $this->getSignatory($i);
+        }
+
+        return $pubKeys;
     }
 
     /**

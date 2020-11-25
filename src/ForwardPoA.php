@@ -9,6 +9,7 @@ use ForwardBlock\Chain\PoA\Transactions\TxFlag;
 use ForwardBlock\Chain\PoA\Transactions\TxFlagsInterface;
 use ForwardBlock\Protocol\AbstractProtocolChain;
 use ForwardBlock\Protocol\ProtocolConstants;
+use ForwardBlock\Protocol\Transactions\AbstractTxFlag;
 use ForwardBlock\Protocol\Transactions\TxFlags;
 
 /**
@@ -54,11 +55,27 @@ class ForwardPoA extends AbstractProtocolChain implements TxFlagsInterface, Ledg
      */
     protected function registerTxFlags(TxFlags $flags): void
     {
+        $ledgerFlags = $flags->ledgerFlags();
+        $ledgerFlags->append(LedgerEntryFlags::TX_RECEIPT_G_INIT_SUPPLY, true);
+        $ledgerFlags->append(LedgerEntryFlags::TX_RECEIPT_MINT, true);
+        $ledgerFlags->append(LedgerEntryFlags::TX_RECEIPT_DEBIT_FEE, false, true);
+
         // TX: GENESIS
-        $flags->append($this->createTxFlag(ProtocolConstants::GENESIS_TX_FLAG, "GENESIS", true));
+        $flags->append($this->createTxFlag(ProtocolConstants::GENESIS_TX_FLAG, "GENESIS"));
 
         // TX: REGISTER
-        $flags->append($this->createTxFlag(self::TX_FLAG_REGISTER, "REGISTER", true));
+        $flags->append($this->createTxFlag(self::TX_FLAG_REGISTER, "REGISTER"));
+    }
+
+    /**
+     * @param AbstractTxFlag $f
+     * @param int $blockHeightContext
+     * @return bool
+     */
+    public function isEnabledTxFlag(AbstractTxFlag $f, int $blockHeightContext): bool
+    {
+        // Check tx flag in block height's context
+        return true;
     }
 
     /**
@@ -72,11 +89,10 @@ class ForwardPoA extends AbstractProtocolChain implements TxFlagsInterface, Ledg
     /**
      * @param int $dec
      * @param string $name
-     * @param bool $enabled
      * @return TxFlag
      */
-    private function createTxFlag(int $dec, string $name, bool $enabled): TxFlag
+    private function createTxFlag(int $dec, string $name): TxFlag
     {
-        return new TxFlag($this, $dec, $name, $enabled);
+        return new TxFlag($this, $dec, $name);
     }
 }

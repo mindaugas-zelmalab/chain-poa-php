@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace ForwardBlock\Chain\PoA\Transactions;
 
-use ForwardBlock\Chain\PoA\ForwardPoA;
 use ForwardBlock\Chain\PoA\Transactions\Flags\RegisterTx;
 use ForwardBlock\Protocol\AbstractProtocolChain;
 use ForwardBlock\Protocol\KeyPair\PublicKey;
@@ -12,7 +11,7 @@ use ForwardBlock\Protocol\KeyPair\PublicKey;
  * Class TxFactory
  * @package ForwardBlock\Chain\PoA\Transactions
  */
-class TxFactory
+class TxFactory implements TxFlagsInterface
 {
     /** @var AbstractProtocolChain */
     private AbstractProtocolChain $p;
@@ -33,7 +32,24 @@ class TxFactory
     public function registerTx(PublicKey $publicKey): RegisterTx
     {
         /** @var RegisterTx $tx */
-        $tx = $this->p->txFlags()->get(ForwardPoA::TX_FLAG_REGISTER)->create([$this->p, $publicKey]);
+        $tx = $this->createTx(self::TX_FLAG_REGISTER, [$this->p, $publicKey]);
         return $tx;
+    }
+
+    /**
+     * @param int $flag
+     * @param array $args
+     * @return ProtocolTxConstructor
+     */
+    private function createTx(int $flag, array $args): ProtocolTxConstructor
+    {
+        try {
+            /** @var ProtocolTxConstructor $pTx */
+            $pTx = $this->p->txFlags()->get($flag)->create($args);
+        } catch (\Exception $e) {
+            throw new \UnexpectedValueException(sprintf('[%s] %s', get_class($e), $e->getMessage()));
+        }
+
+        return $pTx;
     }
 }

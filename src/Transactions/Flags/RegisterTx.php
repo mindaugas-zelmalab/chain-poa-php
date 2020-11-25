@@ -4,18 +4,18 @@ declare(strict_types=1);
 namespace ForwardBlock\Chain\PoA\Transactions\Flags;
 
 use Comely\DataTypes\Buffer\Binary;
-use ForwardBlock\Protocol\AbstractProtocolChain;
+use ForwardBlock\Chain\PoA\ForwardPoA;
+use ForwardBlock\Chain\PoA\Transactions\ProtocolTxConstructor;
 use ForwardBlock\Protocol\Exception\TxConstructException;
 use ForwardBlock\Protocol\KeyPair\PublicKey;
 use ForwardBlock\Protocol\Math\UInts;
-use ForwardBlock\Protocol\Transactions\AbstractTxConstructor;
 use ForwardBlock\Protocol\Transactions\Traits\TransferObjectsTrait;
 
 /**
  * Class RegisterTx
  * @package ForwardBlock\Chain\PoA\Transactions\Flags
  */
-class RegisterTx extends AbstractTxConstructor
+class RegisterTx extends ProtocolTxConstructor
 {
     /** @var PublicKey */
     private PublicKey $pubKey;
@@ -28,12 +28,14 @@ class RegisterTx extends AbstractTxConstructor
 
     /**
      * RegisterTx constructor.
-     * @param AbstractProtocolChain $protocol
+     * @param ForwardPoA $p
      * @param PublicKey $new
+     * @param int $epoch
+     * @throws TxConstructException
      */
-    public function __construct(AbstractProtocolChain $protocol, PublicKey $new)
+    public function __construct(ForwardPoA $p, PublicKey $new, int $epoch)
     {
-        parent::__construct($protocol, 1, $protocol->txFlags()->getWithName("register"));
+        parent::__construct($p, 1, $p->txFlags()->getWithName("register"), $epoch);
         $this->pubKey = $new;
     }
 

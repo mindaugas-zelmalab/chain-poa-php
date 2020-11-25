@@ -7,7 +7,6 @@ use Comely\DataTypes\Buffer\Binary;
 use Comely\Utils\OOP\OOP;
 use ForwardBlock\Chain\PoA\ForwardPoA;
 use ForwardBlock\Protocol\AbstractProtocolChain;
-use ForwardBlock\Protocol\Transactions\AbstractTxConstructor;
 use ForwardBlock\Protocol\Transactions\AbstractTxFlag;
 use ForwardBlock\Protocol\Transactions\AbstractTxReceipt;
 use ForwardBlock\Protocol\Transactions\Transaction;
@@ -26,11 +25,10 @@ class TxFlag extends AbstractTxFlag
      * @param AbstractProtocolChain $p
      * @param int $id
      * @param string $name
-     * @param bool $status
      */
-    public function __construct(AbstractProtocolChain $p, int $id, string $name, bool $status)
+    public function __construct(AbstractProtocolChain $p, int $id, string $name)
     {
-        parent::__construct($p, $id, $name, $status);
+        parent::__construct($p, $id, $name);
         $pascalCase = OOP::PascalCase($name);
 
         // Create TX class
@@ -42,9 +40,9 @@ class TxFlag extends AbstractTxFlag
 
     /**
      * @param array $args
-     * @return AbstractTxConstructor
+     * @return ProtocolTxConstructor
      */
-    public function create(array $args): AbstractTxConstructor
+    public function create(array $args): ProtocolTxConstructor
     {
         $createClass = $this->createClass;
         return new $createClass(...$args);
