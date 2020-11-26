@@ -74,7 +74,11 @@ class ForwardPoA extends AbstractProtocolChain implements TxFlagsInterface, Ledg
      */
     public function isEnabledTxFlag(AbstractTxFlag $f, int $blockHeightContext): bool
     {
-        // Check tx flag in block height's context
+        switch ($f->id()) {
+            case self::GENESIS_TX_FLAG: // GenesisTx available only in block height 0 context
+                return $blockHeightContext === 0;
+        }
+
         return true;
     }
 
