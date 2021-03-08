@@ -19,6 +19,9 @@ use ForwardBlock\Protocol\Transactions\TxFlags;
 class ForwardPoA extends AbstractProtocolChain implements TxFlagsInterface, LedgerEntryFlags
 {
     /** @var string */
+    public const PROTOCOL_VERSION = "0.1.1";
+
+    /** @var string */
     public const CORE_PROTOCOL_NAMESPACE = 'ForwardBlock\Blockchain\Shared\Protocol';
 
     /** @var TxFactory */
