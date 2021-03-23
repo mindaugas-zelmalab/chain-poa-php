@@ -61,7 +61,7 @@ class TxFlag extends AbstractTxFlag
     public function decode(Binary $encoded): AbstractPreparedTx
     {
         $decodeClass = $this->decodeClass;
-        return new $decodeClass($this->p, $encoded);
+        return call_user_func_array([$decodeClass, "Decode"], [$this->p, $encoded]);
     }
 
     /**
