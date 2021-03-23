@@ -57,19 +57,17 @@ class GenesisTx extends AbstractPreparedTx
     public function array(): array
     {
         $partial = parent::array();
-        $data = [];
+        $partial["txData"] = [];
 
         if (isset($this->chainMasterPubKey)) {
-            $data["chainMasterPubKey"] = $this->chainMasterPubKey;
+            $partial["txData"]["chainMasterPubKey"] = $this->chainMasterPubKey;
         }
 
-        $data["signers"] = $this->signers;
-        if(isset($this->initialSupply)) {
-            $data["initialSupply"] = $this->initialSupply;
+        $partial["txData"]["signers"] = $this->signers;
+        if (isset($this->initialSupply)) {
+            $partial["txData"]["initialSupply"] = $this->initialSupply;
         }
 
-        $partial["txClass"] = get_called_class();
-        $partial["txData"] = $data;
         return $partial;
     }
 }
