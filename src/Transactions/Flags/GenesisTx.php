@@ -3,7 +3,11 @@ declare(strict_types=1);
 
 namespace ForwardBlock\Chain\PoA\Transactions\Flags;
 
+use Comely\DataTypes\Buffer\Base16;
+use Comely\DataTypes\Buffer\Binary;
 use ForwardBlock\Protocol\Exception\TxDecodeException;
+use ForwardBlock\Protocol\KeyPair\PublicKey;
+use ForwardBlock\Protocol\Math\UInts;
 use ForwardBlock\Protocol\Transactions\AbstractPreparedTx;
 
 /**
@@ -12,24 +16,38 @@ use ForwardBlock\Protocol\Transactions\AbstractPreparedTx;
  */
 class GenesisTx extends AbstractPreparedTx
 {
+    /** @var PublicKey */
+    protected PublicKey $chainMasterPubKey;
     /** @var array */
-    public array $chainMasters = [];
+    protected array $signers = [];
+    /** @var int */
+    protected int $initialSupply;
 
     /**
      * @throws TxDecodeException
+     * @throws \ForwardBlock\Protocol\Exception\KeyPairException
      */
     protected function decodeCallback(): void
     {
         if ($this->data) {
-            $keys = $this->data->raw();
-            $chainMasters = str_split($keys, 32);
-            if (count($chainMasters) !== 5) {
-                throw TxDecodeException::Incomplete($this,
-                    sprintf('Genesis tx must have precisely 5 chain masters; Got %d', count($chainMasters))
-                );
+            $dataReader = (new Binary($this->data->raw()))->read();
+            $dataReader->throwUnderflowEx();
+
+            // ChainMaster Identifier
+            $this->chainMasterPubKey = $this->p->keyPair()->publicKeyFromEntropy(new Base16($dataReader->next(33)));
+
+            // Signers
+            for ($i = 0; $i < 5; $i++) {
+                $this->signers[] = $this->p->keyPair()->publicKeyFromEntropy(new Base16($dataReader->next(33)));
             }
 
-            $this->chainMasters = $chainMasters;
+            // Initial Supply
+            $this->initialSupply = UInts::Decode_UInt8LE($dataReader->next(8));
+
+            // Extra bytes?
+            if ($dataReader->remaining()) {
+                throw TxDecodeException::Incomplete($this, 'Data contains unnecessary additional bytes');
+            }
         }
     }
 
@@ -39,10 +57,19 @@ class GenesisTx extends AbstractPreparedTx
     public function array(): array
     {
         $partial = parent::array();
-        foreach ($this->chainMasters as $chainMaster) {
-            $partial[] = bin2hex($chainMaster);
+        $data = [];
+
+        if (isset($this->chainMasterPubKey)) {
+            $data["chainMasterPubKey"] = $this->chainMasterPubKey;
         }
 
+        $data["signers"] = $this->signers;
+        if(isset($this->initialSupply)) {
+            $data["initialSupply"] = $this->initialSupply;
+        }
+
+        $partial["txClass"] = get_called_class();
+        $partial["txData"] = $data;
         return $partial;
     }
 }
