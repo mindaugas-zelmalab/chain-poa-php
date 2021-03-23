@@ -34,11 +34,11 @@ class GenesisTx extends AbstractPreparedTx
             $dataReader->throwUnderflowEx();
 
             // ChainMaster Identifier
-            $this->chainMasterPubKey = $this->p->keyPair()->publicKeyFromEntropy(new Base16($dataReader->next(33)));
+            $this->chainMasterPubKey = $this->p->keyPair()->publicKeyFromEntropy(new Base16(bin2hex($dataReader->next(33))));
 
             // Signers
             for ($i = 0; $i < 5; $i++) {
-                $this->signers[] = $this->p->keyPair()->publicKeyFromEntropy(new Base16($dataReader->next(33)));
+                $this->signers[] = $this->p->keyPair()->publicKeyFromEntropy(new Base16(bin2hex($dataReader->next(33))));
             }
 
             // Initial Supply
