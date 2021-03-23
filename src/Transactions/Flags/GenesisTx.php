@@ -68,7 +68,6 @@ class GenesisTx extends AbstractPreparedTx
             $partial["txData"]["signers"][] = $signer->compressed()->hexits(true);
         }
 
-        $partial["txData"]["signers"] = $this->signers;
         if (isset($this->initialSupply)) {
             $partial["txData"]["initialSupply"] = $this->initialSupply;
         }
