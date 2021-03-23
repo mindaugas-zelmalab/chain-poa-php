@@ -11,4 +11,7 @@ use ForwardBlock\Protocol\Transactions\AbstractPreparedTx;
  */
 class RegisterTx extends AbstractPreparedTx
 {
+    public function decodeCallback(): void
+    {
+    }
 }
