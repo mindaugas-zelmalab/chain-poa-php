@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace ForwardBlock\Chain\PoA\Transactions;
 
-use ForwardBlock\Chain\PoA\Transactions\Flags\RegisterTx;
+use ForwardBlock\Chain\PoA\Transactions\Flags\RegisterTxConstructor;
 use ForwardBlock\Protocol\AbstractProtocolChain;
 use ForwardBlock\Protocol\KeyPair\PublicKey;
 
@@ -28,11 +28,11 @@ class TxFactory implements TxFlagsInterface
     /**
      * @param PublicKey $publicKey
      * @param int|null $epoch
-     * @return RegisterTx
+     * @return RegisterTxConstructor
      */
-    public function registerTx(PublicKey $publicKey, ?int $epoch = null): RegisterTx
+    public function registerTx(PublicKey $publicKey, ?int $epoch = null): RegisterTxConstructor
     {
-        /** @var RegisterTx $tx */
+        /** @var RegisterTxConstructor $tx */
         $tx = $this->createTx(self::TX_FLAG_REGISTER, [$this->p, $publicKey, $this->getEpochArg($epoch)]);
         return $tx;
     }

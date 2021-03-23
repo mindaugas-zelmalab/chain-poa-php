@@ -7,9 +7,9 @@ use Comely\DataTypes\Buffer\Binary;
 use Comely\Utils\OOP\OOP;
 use ForwardBlock\Chain\PoA\ForwardPoA;
 use ForwardBlock\Protocol\AbstractProtocolChain;
+use ForwardBlock\Protocol\Transactions\AbstractPreparedTx;
 use ForwardBlock\Protocol\Transactions\AbstractTxFlag;
 use ForwardBlock\Protocol\Transactions\AbstractTxReceipt;
-use ForwardBlock\Protocol\Transactions\Transaction;
 
 /**
  * Class TxFlag
@@ -19,6 +19,8 @@ class TxFlag extends AbstractTxFlag
 {
     /** @var string */
     private string $createClass;
+    /** @var string */
+    private string $decodeClass;
 
     /**
      * TxFlag constructor.
@@ -32,9 +34,13 @@ class TxFlag extends AbstractTxFlag
         $pascalCase = OOP::PascalCase($name);
 
         // Create TX class
-        $this->createClass = sprintf('ForwardBlock\Chain\PoA\Transactions\Flags\%sTx', $pascalCase);
+        $this->createClass = sprintf('ForwardBlock\Chain\PoA\Transactions\Flags\%sTxConstructor', $pascalCase);
         if (!class_exists($this->createClass)) {
             throw new \UnexpectedValueException('Cannot find "%s" tx create class');
+        }
+        $this->decodeClass = sprintf('ForwardBlock\Chain\PoA\Transactions\Flags\%sTx', $pascalCase);
+        if (!class_exists($this->decodeClass)) {
+            throw new \UnexpectedValueException('Cannot find "%s" tx decode class');
         }
     }
 
@@ -49,11 +55,21 @@ class TxFlag extends AbstractTxFlag
     }
 
     /**
-     * @param Transaction $tx
+     * @param Binary $encoded
+     * @return AbstractPreparedTx
+     */
+    public function decode(Binary $encoded): AbstractPreparedTx
+    {
+        $decodeClass = $this->decodeClass;
+        return new $decodeClass($this->p, $encoded);
+    }
+
+    /**
+     * @param AbstractPreparedTx $tx
      * @param int $blockHeightContext
      * @return AbstractTxReceipt
      */
-    public function newReceipt(Transaction $tx, int $blockHeightContext): AbstractTxReceipt
+    public function newReceipt(AbstractPreparedTx $tx, int $blockHeightContext): AbstractTxReceipt
     {
         $receiptClass = sprintf(ForwardPoA::CORE_PROTOCOL_NAMESPACE . '\Txs\%sReceipt', OOP::PascalCase($this->name));
         if (!class_exists($receiptClass)) {
@@ -64,12 +80,12 @@ class TxFlag extends AbstractTxFlag
     }
 
     /**
-     * @param Transaction $tx
+     * @param AbstractPreparedTx $tx
      * @param Binary $bytes
      * @param int $blockHeightContext
      * @return AbstractTxReceipt
      */
-    public function decodeReceipt(Transaction $tx, Binary $bytes, int $blockHeightContext): AbstractTxReceipt
+    public function decodeReceipt(AbstractPreparedTx $tx, Binary $bytes, int $blockHeightContext): AbstractTxReceipt
     {
         $receiptClass = sprintf(ForwardPoA::CORE_PROTOCOL_NAMESPACE . '\Txs\%sReceipt', OOP::PascalCase($this->name));
         if (!class_exists($receiptClass)) {
