@@ -65,7 +65,7 @@ class GenesisTx extends AbstractPreparedTx
 
         /** @var PublicKey $signer */
         foreach ($this->signers as $signer) {
-            $partial["txData"]["signers"][] = $signer->compressed()->hexits(false);
+            $partial["txData"]["signers"][] = $signer->compressed()->hexits(true);
         }
 
         $partial["txData"]["signers"] = $this->signers;
