@@ -86,6 +86,18 @@ class ForwardPoA extends AbstractProtocolChain implements TxFlagsInterface, Ledg
     }
 
     /**
+     * @param int $blockHeightContext
+     * @return int
+     */
+    public function getForkId(int $blockHeightContext): int
+    {
+        switch ($blockHeightContext) {
+            default:
+                return $this->config->forkId;
+        }
+    }
+
+    /**
      * @return TxFactory
      */
     public function txFactory(): TxFactory
