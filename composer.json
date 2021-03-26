@@ -19,7 +19,7 @@
     "ext-bcmath": "*",
     "ext-curl": "*",
     "ext-json": "*",
-    "forwardblock-io/protocol-php": "dev-master#a7ab9b5"
+    "forwardblock-io/protocol-php": "dev-master#22cc3f0"
   },
   "autoload": {
     "psr-4": {
