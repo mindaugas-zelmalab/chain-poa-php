@@ -20,5 +20,5 @@ interface LedgerEntryFlags
     /** @var int Registration charges */
     public const TX_RECEIPT_REGISTER = 301;
     /** @var int Referrer commission */
-    public const TX_RECEIPT_REF_COM = 302;
+    public const TX_RECEIPT_REGISTER_REF_COM = 302;
 }
