@@ -6,10 +6,11 @@ namespace ForwardBlock\Chain\PoA\Transactions\Flags;
 use Comely\DataTypes\Buffer\Binary;
 use ForwardBlock\Chain\PoA\ForwardPoA;
 use ForwardBlock\Chain\PoA\Transactions\ProtocolTxConstructor;
+use ForwardBlock\Protocol\Accounts\ChainAccountInterface;
 use ForwardBlock\Protocol\Exception\TxConstructException;
+use ForwardBlock\Protocol\Exception\TxEncodeException;
 use ForwardBlock\Protocol\KeyPair\PublicKey;
 use ForwardBlock\Protocol\Math\UInts;
-use ForwardBlock\Protocol\Transactions\Traits\TransferObjectsTrait;
 
 /**
  * Class RegisterTxConstructor
@@ -19,12 +20,10 @@ class RegisterTxConstructor extends ProtocolTxConstructor
 {
     /** @var PublicKey */
     private PublicKey $pubKey;
-    /** @var PublicKey|null */
-    private ?PublicKey $referrer = null;
+    /** @var ChainAccountInterface|null */
+    private ?ChainAccountInterface $referrer = null;
     /** @var array */
     private array $multiSig = [];
-
-    use TransferObjectsTrait;
 
     /**
      * RegisterTx constructor.
@@ -40,10 +39,10 @@ class RegisterTxConstructor extends ProtocolTxConstructor
     }
 
     /**
-     * @param PublicKey $referrer
+     * @param ChainAccountInterface $referrer
      * @return $this
      */
-    public function setReferrer(PublicKey $referrer): self
+    public function setReferrer(ChainAccountInterface $referrer): self
     {
         $this->referrer = $referrer;
         return $this;
@@ -65,22 +64,30 @@ class RegisterTxConstructor extends ProtocolTxConstructor
     }
 
     /**
-     * @return void
+     * @throws TxEncodeException
      */
     protected function beforeSerialize(): void
     {
         $data = new Binary();
 
+        if (!isset($this->pubKey)) {
+            throw new TxEncodeException('Registrant public key is not set');
+        }
+
         // Append new account's public key
-        $data->append($this->pubKey->compressed()->binary());
+        $data->append(str_pad($this->pubKey->compressed()->binary(), 33, "\0", STR_PAD_LEFT));
 
         // Append referrer's public key
-        $referrer = $this->referrer ?? $this->sender;
-        if ($referrer) {
-            $data->append($referrer->compressed()->binary());
-        } else {
-            $data->append(str_repeat("\0", 33));
+        $referrer = $this->sender;
+        if ($this->referrer) {
+            $referrer = hex2bin($this->referrer->getHash160());
         }
+
+        if (!$referrer) {
+            throw new TxEncodeException('No referrer defined');
+        }
+
+        $data->append($referrer); // 20 bytes referrer
 
         // MultiSig?
         $multiSigCount = count($this->multiSig);
@@ -89,7 +96,7 @@ class RegisterTxConstructor extends ProtocolTxConstructor
         if ($multiSigCount) {
             /** @var PublicKey $pubKey */
             foreach ($this->multiSig as $pubKey) {
-                $data->append($pubKey->compressed()->binary()->raw());
+                $data->append(str_pad($pubKey->compressed()->binary()->raw(), 33, "\0", STR_PAD_LEFT));
             }
         }
 
