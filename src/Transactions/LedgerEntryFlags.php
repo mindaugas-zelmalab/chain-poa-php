@@ -15,4 +15,10 @@ interface LedgerEntryFlags
     public const TX_RECEIPT_MINT = 0x02;
     /** @var int Fee deduction per byte */
     public const TX_RECEIPT_DEBIT_FEE = 0x64;
+    /** @var int Fee deduction (as per schedule of charges) */
+    public const TX_RECEIPT_DEBIT_FEE2 = 0x65;
+    /** @var int Registration charges */
+    public const TX_RECEIPT_REGISTER = 301;
+    /** @var int Referrer commission */
+    public const TX_RECEIPT_REF_COM = 302;
 }
