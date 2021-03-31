@@ -87,6 +87,14 @@ class RegisterTx extends AbstractPreparedTx
     /**
      * @return array
      */
+    public function multiSig(): array
+    {
+        return $this->multiSig;
+    }
+
+    /**
+     * @return array
+     */
     public function array(): array
     {
         $partial = parent::array();
