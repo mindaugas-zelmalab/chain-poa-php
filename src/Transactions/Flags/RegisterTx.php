@@ -85,6 +85,14 @@ class RegisterTx extends AbstractPreparedTx
     }
 
     /**
+     * @return string
+     */
+    public function referrer(): string
+    {
+        return $this->referrerHash160;
+    }
+
+    /**
      * @return array
      */
     public function multiSig(): array
