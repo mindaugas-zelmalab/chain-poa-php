@@ -11,6 +11,8 @@ interface TxFlagsInterface
 {
     /** @var int Genesis/Chain Initializer Transaction */
     public const TX_FLAG_GENESIS = 0x01;
+    /** @var int Account upgrade op (chain master only) */
+    public const TX_FLAG_ACCOUNT_UPGRADE = 0x11;
     /** @var int Account Registration Transaction */
     public const TX_FLAG_REGISTER = 0x64;
     /** @var int Account to Account transfer op */

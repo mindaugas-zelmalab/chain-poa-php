@@ -70,6 +70,9 @@ class ForwardPoA extends AbstractProtocolChain implements TxFlagsInterface, Ledg
         $flags->append($this->createTxFlag(self::TX_FLAG_REGISTER, "REGISTER"));
         $ledgerFlags->append(LedgerEntryFlags::TX_RECEIPT_REGISTER, false);
         $ledgerFlags->append(LedgerEntryFlags::TX_RECEIPT_REGISTER_REF_COM, true);
+
+        // TX: ACCOUNT_UPGRADE
+        $flags->append($this->createTxFlag(self::TX_FLAG_REGISTER, "ACCOUNT_UPGRADE"));
     }
 
     /**
