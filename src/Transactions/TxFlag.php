@@ -71,7 +71,7 @@ class TxFlag extends AbstractTxFlag
      */
     public function newReceipt(AbstractPreparedTx $tx, int $blockHeightContext): AbstractTxReceipt
     {
-        $receiptClass = sprintf(ForwardPoA::CORE_PROTOCOL_NAMESPACE . '\Txs\%sReceipt', OOP::PascalCase($this->name));
+        $receiptClass = sprintf(ForwardPoA::CORE_PROTOCOL_NAMESPACE . '\Receipts\%sReceipt', OOP::PascalCase($this->name));
         if (!class_exists($receiptClass)) {
             throw new \UnexpectedValueException('Cannot find "%s" tx receipt class');
         }
@@ -87,7 +87,7 @@ class TxFlag extends AbstractTxFlag
      */
     public function decodeReceipt(AbstractPreparedTx $tx, Binary $bytes, int $blockHeightContext): AbstractTxReceipt
     {
-        $receiptClass = sprintf(ForwardPoA::CORE_PROTOCOL_NAMESPACE . '\Txs\%sReceipt', OOP::PascalCase($this->name));
+        $receiptClass = sprintf(ForwardPoA::CORE_PROTOCOL_NAMESPACE . '\Receipts\%sReceipt', OOP::PascalCase($this->name));
         if (!class_exists($receiptClass)) {
             throw new \UnexpectedValueException('Cannot find "%s" tx receipt class');
         }
