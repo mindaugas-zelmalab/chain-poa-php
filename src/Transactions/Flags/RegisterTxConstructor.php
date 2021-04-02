@@ -55,11 +55,15 @@ class RegisterTxConstructor extends ProtocolTxConstructor
      */
     public function setMultiSigKeys(PublicKey ...$keys): self
     {
-        if (count($keys) > 5) {
-            throw TxConstructException::Prop("account.multiSig", "Cannot add more than 5 public keys");
+        if (count($keys) > 4) {
+            throw TxConstructException::Prop("account.multiSig", "Cannot add more than 4 public keys");
         }
 
-        $this->multiSig = $keys;
+        $this->multiSig[] = $this->pubKey;
+        foreach ($keys as $key) {
+            $this->multiSig[] = $key;
+        }
+
         return $this;
     }
 
