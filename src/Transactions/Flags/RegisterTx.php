@@ -85,6 +85,14 @@ class RegisterTx extends AbstractPreparedTx
     }
 
     /**
+     * @return PublicKey
+     */
+    public function publicKey(): PublicKey
+    {
+        return $this->pubKey;
+    }
+
+    /**
      * @return string
      */
     public function referrer(): string
