@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace ForwardBlock\Chain\PoA\Transactions;
 
+use ForwardBlock\Chain\PoA\Transactions\Flags\AccountUpgradeTxConstructor;
 use ForwardBlock\Chain\PoA\Transactions\Flags\RegisterTxConstructor;
 use ForwardBlock\Protocol\AbstractProtocolChain;
 use ForwardBlock\Protocol\KeyPair\PublicKey;
@@ -34,6 +35,18 @@ class TxFactory implements TxFlagsInterface
     {
         /** @var RegisterTxConstructor $tx */
         $tx = $this->createTx(self::TX_FLAG_REGISTER, [$this->p, $publicKey, $this->getEpochArg($epoch)]);
+        return $tx;
+    }
+
+    /**
+     * @param int $action
+     * @param int|null $epoch
+     * @return AccountUpgradeTxConstructor
+     */
+    public function accountUpgrade(int $action, ?int $epoch = null): AccountUpgradeTxConstructor
+    {
+        /** @var AccountUpgradeTxConstructor $tx */
+        $tx = $this->createTx(self::TX_FLAG_ACCOUNT_UPGRADE, [$this->p, $this->getEpochArg($epoch), $action]);
         return $tx;
     }
 
