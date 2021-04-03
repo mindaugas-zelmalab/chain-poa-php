@@ -9,6 +9,7 @@ use ForwardBlock\Chain\PoA\Transactions\ProtocolTxConstructor;
 use ForwardBlock\Protocol\Exception\TxConstructException;
 use ForwardBlock\Protocol\Math\UInts;
 use ForwardBlock\Protocol\Transactions\Traits\RecipientTrait;
+use ForwardBlock\Protocol\Transactions\Traits\TransferObjectsTrait;
 
 /**
  * Class AccountUpgradeTxConstructor
@@ -17,6 +18,7 @@ use ForwardBlock\Protocol\Transactions\Traits\RecipientTrait;
 class AccountUpgradeTxConstructor extends ProtocolTxConstructor
 {
     use RecipientTrait;
+    use TransferObjectsTrait;
 
     /** @var int */
     private int $action;

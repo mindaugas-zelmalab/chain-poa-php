@@ -11,7 +11,6 @@ use ForwardBlock\Protocol\Exception\TxConstructException;
 use ForwardBlock\Protocol\Exception\TxEncodeException;
 use ForwardBlock\Protocol\KeyPair\PublicKey;
 use ForwardBlock\Protocol\Math\UInts;
-use ForwardBlock\Protocol\Transactions\Traits\TransferObjectsTrait;
 
 /**
  * Class RegisterTxConstructor
@@ -25,8 +24,6 @@ class RegisterTxConstructor extends ProtocolTxConstructor
     private ?ChainAccountInterface $referrer = null;
     /** @var array */
     private array $multiSig = [];
-
-    use TransferObjectsTrait;
 
     /**
      * RegisterTx constructor.
