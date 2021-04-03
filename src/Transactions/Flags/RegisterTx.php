@@ -39,7 +39,7 @@ class RegisterTx extends AbstractPreparedTx
         // Get the public key
         $pubKeyBytes = $dataReader->first(33);
         try {
-            $this->p->keyPair()->publicKeyFromEntropy(new Base16(bin2hex($pubKeyBytes)));
+            $this->pubKey = $this->p->keyPair()->publicKeyFromEntropy(new Base16(bin2hex($pubKeyBytes)));
         } catch (KeyPairException $e) {
             $this->p->debugError($e);
             throw TxDecodeException::Incomplete($this, 'Registrant public key decode error');
@@ -64,7 +64,7 @@ class RegisterTx extends AbstractPreparedTx
                 try {
                     $msKPub = $this->p->keyPair()->publicKeyFromEntropy(new Base16(bin2hex($msKBytes)));
                     if ($i === 0) {
-                        if(!$msKPub->compressed()->equals($this->pubKey->compressed())) {
+                        if (!$msKPub->compressed()->equals($this->pubKey->compressed())) {
                             throw TxDecodeException::Incomplete($this, 'MultiSig key 0 must be same as account public key');
                         }
                     }
