@@ -79,7 +79,7 @@ class RegisterTxConstructor extends ProtocolTxConstructor
         }
 
         // Append new account's public key
-        $data->append(str_pad($this->pubKey->compressed()->binary(), 33, "\0", STR_PAD_LEFT));
+        $data->append(str_pad($this->pubKey->compressed()->binary()->raw(), 33, "\0", STR_PAD_LEFT));
 
         // Append referrer's public key
         $referrer = $this->sender;
