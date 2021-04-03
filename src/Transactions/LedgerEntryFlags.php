@@ -19,6 +19,8 @@ interface LedgerEntryFlags
     public const TX_RECEIPT_TRANSFER_DEBIT = 201;
     /** @var int Transfer's credit to payee */
     public const TX_RECEIPT_TRANSFER_CREDIT = 202;
+    /** @var int Transfer's fee */
+    public const TX_RECEIPT_TRANSFER_FEE = 203;
     /** @var int Registration charges */
     public const TX_RECEIPT_REGISTER = 301;
     /** @var int Referrer commission */
