@@ -44,6 +44,14 @@ class ChainMaster extends PublicKey implements ChainAccountInterface
     }
 
     /**
+     * @return PublicKey
+     */
+    public function getPublicKey(): PublicKey
+    {
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function initialSupply(): int
