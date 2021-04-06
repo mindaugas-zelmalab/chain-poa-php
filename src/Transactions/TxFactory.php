@@ -3,10 +3,13 @@ declare(strict_types=1);
 
 namespace ForwardBlock\Chain\PoA\Transactions;
 
+use Comely\DataTypes\Buffer\Binary;
 use ForwardBlock\Chain\PoA\Transactions\Flags\AccountUpgradeTxConstructor;
 use ForwardBlock\Chain\PoA\Transactions\Flags\RegisterTxConstructor;
 use ForwardBlock\Protocol\AbstractProtocolChain;
 use ForwardBlock\Protocol\KeyPair\PublicKey;
+use ForwardBlock\Protocol\Transactions\AbstractPreparedTx;
+use ForwardBlock\Protocol\Transactions\Transaction;
 
 /**
  * Class TxFactory
@@ -43,11 +46,22 @@ class TxFactory implements TxFlagsInterface
      * @param int|null $epoch
      * @return AccountUpgradeTxConstructor
      */
-    public function accountUpgrade(int $action, ?int $epoch = null): AccountUpgradeTxConstructor
+    public function accountUpgradeTx(int $action, ?int $epoch = null): AccountUpgradeTxConstructor
     {
         /** @var AccountUpgradeTxConstructor $tx */
         $tx = $this->createTx(self::TX_FLAG_ACCOUNT_UPGRADE, [$this->p, $this->getEpochArg($epoch), $action]);
         return $tx;
+    }
+
+    /**
+     * @param Binary $encoded
+     * @return AbstractPreparedTx
+     * @throws \ForwardBlock\Protocol\Exception\TxDecodeException
+     * @throws \ForwardBlock\Protocol\Exception\TxFlagException
+     */
+    public function decode(Binary $encoded): AbstractPreparedTx
+    {
+        return Transaction::DecodeAs($this->p, $encoded);
     }
 
     /**
