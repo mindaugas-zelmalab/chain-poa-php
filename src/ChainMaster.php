@@ -16,17 +16,17 @@ use FurqanSiddiqui\BIP32\Exception\PublicKeyException;
 class ChainMaster extends PublicKey implements ChainAccountInterface
 {
     /** @var string ChainMaster Account Public Key */
-    public const PUBLIC_KEY = "03053c689577b88cfc61279963e17d83025028b400b38ccaa0b14536733205566b";
+    public const PUBLIC_KEY = "02b62ac0d6870a7f1984de6e9997724178f33897ad0eb210a87185fce1e3bfe172";
     /** @var string ChainMaster Signatory # 1 */
-    public const MULTI_SIG_KEY_1 = "03053c689577b88cfc61279963e17d83025028b400b38ccaa0b14536733205566b";
+    public const MULTI_SIG_KEY_1 = "02b62ac0d6870a7f1984de6e9997724178f33897ad0eb210a87185fce1e3bfe172";
     /** @var string ChainMaster Signatory # 2 */
-    public const MULTI_SIG_KEY_2 = "03a41332c77db97752251c013e34400e93e88a65cba09c4cc67bc01a59598775f9";
+    public const MULTI_SIG_KEY_2 = "02723a0478600bfcf861a51339d21fdd19c063e8598c85da6dfcec5dc690b1679d";
     /** @var string ChainMaster Signatory # 3 */
-    public const MULTI_SIG_KEY_3 = "0201c8a43bf301da7be4c3e71d7914a3af2c31911e3a86a3026f45b07063170569";
+    public const MULTI_SIG_KEY_3 = "024096c2184bc02efdf47d475991810b3adc91c1096542f42c15b3779c24d8ac86";
     /** @var string ChainMaster Signatory # 4 */
-    public const MULTI_SIG_KEY_4 = "036b61e1a693d0a2892a02d1acb637a13a9d77badf936648688bcd2e5bb1c366e0";
+    public const MULTI_SIG_KEY_4 = "039b9a061c2f9fe2a42cc9c9d4b45dd5a166151baa18d7494d0aad757b0595a922";
     /** @var string ChainMaster Signatory # 5 */
-    public const MULTI_SIG_KEY_5 = "0213f57c39a0abc589134ac5bf16225168a2b76de267a896f9a70b2571c5534dd8";
+    public const MULTI_SIG_KEY_5 = "02b5fca74e80bd92a2a170d49fed09125f38c29635db29c1cc628a91e94bdf2549";
     /** @var int Initial Supply 100,000,000 */
     public const INITIAL_SUPPLY = 10000000000000000;
 
