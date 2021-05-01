@@ -7,6 +7,7 @@ use Comely\DataTypes\Buffer\Base16;
 use Comely\DataTypes\Buffer\Binary;
 use ForwardBlock\Protocol\Exception\KeyPairException;
 use ForwardBlock\Protocol\Exception\TxDecodeException;
+use ForwardBlock\Protocol\KeyPair\PrivateKey\Signature;
 use ForwardBlock\Protocol\KeyPair\PublicKey;
 use ForwardBlock\Protocol\Math\UInts;
 use ForwardBlock\Protocol\Transactions\AbstractPreparedTx;
@@ -21,6 +22,8 @@ class RegisterTx extends AbstractPreparedTx
     private PublicKey $pubKey;
     /** @var string */
     private string $referrerHash160;
+    /** @var Signature */
+    private Signature $regSign;
     /** @var array */
     private array $multiSig = [];
 
@@ -49,6 +52,16 @@ class RegisterTx extends AbstractPreparedTx
         /** @var string $referrerId */
         $referrerId = $dataReader->next(20);
         $this->referrerHash160 = $referrerId;
+
+        // Registrant's Signature
+        try {
+            $regSignR = $dataReader->next(32);
+            $regSignS = $dataReader->next(32);
+            $regSignV = UInts::Decode_UInt1LE($dataReader->next(1));
+            $this->regSign = new Signature(new Base16(bin2hex($regSignR)), new Base16(bin2hex($regSignS)), $regSignV);
+        } catch (\Exception $e) {
+            throw TxDecodeException::Incomplete($this, 'Registrant signature decode error');
+        }
 
         // MultiSig?
         $multiSigCount = UInts::Decode_UInt1LE($dataReader->next(1));
@@ -114,6 +127,14 @@ class RegisterTx extends AbstractPreparedTx
     }
 
     /**
+     * @return Signature
+     */
+    public function regSign(): Signature
+    {
+        return $this->regSign;
+    }
+
+    /**
      * @return array
      */
     public function array(): array
@@ -127,6 +148,10 @@ class RegisterTx extends AbstractPreparedTx
 
         if (isset($this->referrerHash160)) {
             $partial["txData"]["referrer"] = "0x" . bin2hex($this->referrerHash160);
+        }
+
+        if (isset($this->regSign)) {
+            $partial["txData"]["signature"] = $this->regSign->array();
         }
 
         /** @var PublicKey $msPub */

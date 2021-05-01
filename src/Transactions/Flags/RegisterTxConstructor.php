@@ -9,6 +9,7 @@ use ForwardBlock\Chain\PoA\Transactions\ProtocolTxConstructor;
 use ForwardBlock\Protocol\Accounts\ChainAccountInterface;
 use ForwardBlock\Protocol\Exception\TxConstructException;
 use ForwardBlock\Protocol\Exception\TxEncodeException;
+use ForwardBlock\Protocol\KeyPair\PrivateKey\Signature;
 use ForwardBlock\Protocol\KeyPair\PublicKey;
 use ForwardBlock\Protocol\Math\UInts;
 
@@ -20,8 +21,10 @@ class RegisterTxConstructor extends ProtocolTxConstructor
 {
     /** @var PublicKey */
     private PublicKey $pubKey;
-    /** @var ChainAccountInterface|null */
-    private ?ChainAccountInterface $referrer = null;
+    /** @var ChainAccountInterface */
+    private ChainAccountInterface $referrer;
+    /** @var Signature */
+    private Signature $regSign;
     /** @var array */
     private array $multiSig = [];
 
@@ -40,11 +43,13 @@ class RegisterTxConstructor extends ProtocolTxConstructor
 
     /**
      * @param ChainAccountInterface $referrer
+     * @param Signature $registrantSignature
      * @return $this
      */
-    public function setReferrer(ChainAccountInterface $referrer): self
+    public function setReferrer(ChainAccountInterface $referrer, Signature $registrantSignature): self
     {
         $this->referrer = $referrer;
+        $this->regSign = $registrantSignature;
         return $this;
     }
 
@@ -82,16 +87,20 @@ class RegisterTxConstructor extends ProtocolTxConstructor
         $data->append(str_pad($this->pubKey->compressed()->binary()->raw(), 33, "\0", STR_PAD_LEFT));
 
         // Append referrer's public key
-        $referrer = $this->sender;
-        if ($this->referrer) {
-            $referrer = hex2bin($this->referrer->getHash160());
-        }
-
-        if (!$referrer) {
+        if (!isset($this->referrer)) {
             throw new TxEncodeException('No referrer defined');
         }
 
-        $data->append($referrer); // 20 bytes referrer
+        $data->append(hex2bin($this->referrer->getHash160())); // 20 bytes referrer
+
+        // Registrant's Signature
+        if (!isset($this->regSign)) {
+            throw new TxEncodeException('Registrant signature not set');
+        }
+
+        $data->append($this->regSign->r()->hexits(false));
+        $data->append($this->regSign->s()->hexits(false));
+        $data->append(UInts::Encode_UInt1LE($this->regSign->v()));
 
         // MultiSig?
         $multiSigCount = count($this->multiSig);
