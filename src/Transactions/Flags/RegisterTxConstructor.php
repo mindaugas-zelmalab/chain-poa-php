@@ -98,8 +98,8 @@ class RegisterTxConstructor extends ProtocolTxConstructor
             throw new TxEncodeException('Registrant signature not set');
         }
 
-        $data->append($this->regSign->r()->hexits(false));
-        $data->append($this->regSign->s()->hexits(false));
+        $data->append(hex2bin($this->regSign->r()->hexits(false)));
+        $data->append(hex2bin($this->regSign->s()->hexits(false)));
         $data->append(UInts::Encode_UInt1LE($this->regSign->v()));
 
         // MultiSig?
