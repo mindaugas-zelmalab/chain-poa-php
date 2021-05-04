@@ -96,17 +96,12 @@ class RegisterTxConstructor extends ProtocolTxConstructor
 
         // MultiSig?
         $multiSigCount = count($this->multiSig);
+        $data->append(UInts::Encode_UInt1LE($multiSigCount));
         if ($multiSigCount) {
-            $multiSigCount++;
-            $data->append(UInts::Encode_UInt1LE($multiSigCount));
-            $data->append($pubPad);
-
             /** @var PublicKey $pubKey */
             foreach ($this->multiSig as $pubKey) {
                 $data->append(str_pad($pubKey->compressed()->binary()->raw(), 33, "\0", STR_PAD_LEFT));
             }
-        } else {
-            $data->append(UInts::Encode_UInt1LE(0));
         }
 
         // Registrant's Signature
