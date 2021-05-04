@@ -53,16 +53,6 @@ class RegisterTx extends AbstractPreparedTx
         $referrerId = $dataReader->next(20);
         $this->referrerHash160 = $referrerId;
 
-        // Registrant's Signature
-        try {
-            $regSignR = $dataReader->next(32);
-            $regSignS = $dataReader->next(32);
-            $regSignV = UInts::Decode_UInt1LE($dataReader->next(1));
-            $this->regSign = new Signature(new Base16(bin2hex($regSignR)), new Base16(bin2hex($regSignS)), $regSignV);
-        } catch (\Exception $e) {
-            throw TxDecodeException::Incomplete($this, 'Registrant signature decode error');
-        }
-
         // MultiSig?
         $multiSigCount = UInts::Decode_UInt1LE($dataReader->next(1));
         if ($multiSigCount > 0) {
@@ -94,6 +84,16 @@ class RegisterTx extends AbstractPreparedTx
                 $this->multiSig[] = $msKPub;
                 $multiSigIndex[] = $mskPubI;
             }
+        }
+
+        // Registrant's Signature
+        try {
+            $regSignR = $dataReader->next(32);
+            $regSignS = $dataReader->next(32);
+            $regSignV = UInts::Decode_UInt1LE($dataReader->next(1));
+            $this->regSign = new Signature(new Base16(bin2hex($regSignR)), new Base16(bin2hex($regSignS)), $regSignV);
+        } catch (\Exception $e) {
+            throw TxDecodeException::Incomplete($this, 'Registrant signature decode error');
         }
 
         // Extra bytes?

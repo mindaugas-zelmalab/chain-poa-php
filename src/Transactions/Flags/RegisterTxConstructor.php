@@ -93,15 +93,6 @@ class RegisterTxConstructor extends ProtocolTxConstructor
 
         $data->append(hex2bin($this->referrer->getHash160())); // 20 bytes referrer
 
-        // Registrant's Signature
-        if (!isset($this->regSign)) {
-            throw new TxEncodeException('Registrant signature not set');
-        }
-
-        $data->append(hex2bin($this->regSign->r()->hexits(false)));
-        $data->append(hex2bin($this->regSign->s()->hexits(false)));
-        $data->append(UInts::Encode_UInt1LE($this->regSign->v()));
-
         // MultiSig?
         $multiSigCount = count($this->multiSig);
         $data->append(UInts::Encode_UInt1LE($multiSigCount));
@@ -112,6 +103,15 @@ class RegisterTxConstructor extends ProtocolTxConstructor
                 $data->append(str_pad($pubKey->compressed()->binary()->raw(), 33, "\0", STR_PAD_LEFT));
             }
         }
+
+        // Registrant's Signature
+        if (!isset($this->regSign)) {
+            throw new TxEncodeException('Registrant signature not set');
+        }
+
+        $data->append(hex2bin($this->regSign->r()->hexits(false)));
+        $data->append(hex2bin($this->regSign->s()->hexits(false)));
+        $data->append(UInts::Encode_UInt1LE($this->regSign->v()));
 
         $this->data = $data->readOnly(true);
     }
