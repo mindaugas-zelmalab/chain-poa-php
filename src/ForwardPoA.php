@@ -84,8 +84,10 @@ class ForwardPoA extends AbstractProtocolChain implements TxFlagsInterface, Ledg
         $flags->append($this->createTxFlag(self::TX_FLAG_ASSET_CREATE, "ASSET_CREATE"));
         $ledgerFlags->append(LedgerEntryFlags::TX_ASSET_CREATE_FEE, false);
         $ledgerFlags->append(LedgerEntryFlags::TX_ASSET_MINT, true);
+        $ledgerFlags->append(LedgerEntryFlags::TX_ASSET_MINT_FEE, false);
         $ledgerFlags->append(LedgerEntryFlags::TX_ASSET_BURN, false);
-        $ledgerFlags->append(LedgerEntryFlags::TX_ASSET_STATUS_CHANGE_FEE, false);
+        $ledgerFlags->append(LedgerEntryFlags::TX_ASSET_BURN_FEE, false);
+        $ledgerFlags->append(LedgerEntryFlags::TX_ASSET_TOGGLE_FEE, false);
     }
 
     /**

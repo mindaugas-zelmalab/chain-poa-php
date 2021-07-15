@@ -29,8 +29,12 @@ interface LedgerEntryFlags
     public const TX_ASSET_CREATE_FEE = 1101;
     /** @var int Asset mint */
     public const TX_ASSET_MINT = 1102;
+    /** @var int Asset mint fee */
+    public const TX_ASSET_MINT_FEE = 1103;
     /** @var int Asset burn */
-    public const TX_ASSET_BURN = 1103;
+    public const TX_ASSET_BURN = 1104;
+    /** @var int Asset burn fee */
+    public const TX_ASSET_BURN_FEE = 1105;
     /** @var int Asset status change fee */
-    public const TX_ASSET_STATUS_CHANGE_FEE = 1104;
+    public const TX_ASSET_TOGGLE_FEE = 1106;
 }
