@@ -25,6 +25,8 @@ class AssetCreateTxConstructor extends ProtocolTxConstructor
     /** @var int */
     private int $scale;
     /** @var bool */
+    private bool $isPublic;
+    /** @var bool */
     private bool $isFixedSupply;
     /** @var int */
     private int $mintAmount;
@@ -33,10 +35,11 @@ class AssetCreateTxConstructor extends ProtocolTxConstructor
      * @param string $name
      * @param string $ticker
      * @param int $scale
+     * @param bool $isPublic
      * @return $this
      * @throws TxConstructException
      */
-    public function asset(string $name, string $ticker, int $scale): self
+    public function asset(string $name, string $ticker, int $scale, bool $isPublic): self
     {
         if (!Validator::isValidAssetTicker($ticker)) {
             throw TxConstructException::Prop("asset.ticker", "Invalid asset ticker");
@@ -53,6 +56,7 @@ class AssetCreateTxConstructor extends ProtocolTxConstructor
         $this->name = $name;
         $this->ticker = $ticker;
         $this->scale = $scale;
+        $this->isPublic = $isPublic;
         return $this;
     }
 
@@ -158,6 +162,7 @@ class AssetCreateTxConstructor extends ProtocolTxConstructor
 
         $data->append($this->isFixedSupply ? "\1" : "\0");
         $data->append(UInts::Encode_UInt8LE($this->mintAmount));
+        $data->append($this->isPublic ? "\1" : "\0");
 
         $this->data = $data->readOnly(true);
     }

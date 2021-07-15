@@ -27,6 +27,8 @@ class AssetCreateTx extends AbstractPreparedTx
     private bool $isFixedSupply;
     /** @var int */
     private int $mintAmount;
+    /** @var bool */
+    private bool $isPublic;
 
     /**
      * @throws TxDecodeException
@@ -96,6 +98,14 @@ class AssetCreateTx extends AbstractPreparedTx
         // Mint Amount
         $this->mintAmount = UInts::Decode_UInt8LE($dataReader->next(8));
 
+        // Is Public?
+        $isPublic = $dataReader->next(1);
+        if (!in_array($isPublic, ["\0", "\1"])) {
+            throw TxDecodeException::Incomplete($this, 'Invalid asset visibility indicator');
+        }
+
+        $this->isPublic = $isPublic === "\1";
+
         // Extra bytes?
         if ($dataReader->remaining()) {
             throw TxDecodeException::Incomplete($this, 'Data contains unnecessary additional bytes');
@@ -148,6 +158,14 @@ class AssetCreateTx extends AbstractPreparedTx
     public function assetMintAmount(): int
     {
         return $this->mintAmount;
+    }
+
+    /**
+     * @return bool
+     */
+    public function assetIsPublic(): bool
+    {
+        return $this->isPublic;
     }
 
     /**
