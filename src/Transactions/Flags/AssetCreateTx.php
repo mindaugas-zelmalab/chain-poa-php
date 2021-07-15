@@ -105,7 +105,7 @@ class AssetCreateTx extends AbstractPreparedTx
     /**
      * @return string
      */
-    public function id(): string
+    public function assetId(): string
     {
         return $this->id;
     }
@@ -113,7 +113,7 @@ class AssetCreateTx extends AbstractPreparedTx
     /**
      * @return string
      */
-    public function name(): string
+    public function assetName(): string
     {
         return $this->name;
     }
@@ -121,7 +121,7 @@ class AssetCreateTx extends AbstractPreparedTx
     /**
      * @return string
      */
-    public function ticker(): string
+    public function assetTicker(): string
     {
         return $this->ticker;
     }
@@ -129,7 +129,7 @@ class AssetCreateTx extends AbstractPreparedTx
     /**
      * @return int
      */
-    public function scale(): int
+    public function assetScale(): int
     {
         return $this->scale;
     }
@@ -137,7 +137,7 @@ class AssetCreateTx extends AbstractPreparedTx
     /**
      * @return bool
      */
-    public function isFixedSupply(): bool
+    public function assetIsFixedSupply(): bool
     {
         return $this->isFixedSupply;
     }
@@ -145,7 +145,7 @@ class AssetCreateTx extends AbstractPreparedTx
     /**
      * @return int
      */
-    public function mintAmount(): int
+    public function assetMintAmount(): int
     {
         return $this->mintAmount;
     }
