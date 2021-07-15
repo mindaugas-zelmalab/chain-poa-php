@@ -25,4 +25,12 @@ interface LedgerEntryFlags
     public const TX_RECEIPT_REGISTER = 301;
     /** @var int Referrer commission */
     public const TX_RECEIPT_REGISTER_REF_COM = 302;
+    /** @var int Create new asset fe */
+    public const TX_ASSET_CREATE_FEE = 1101;
+    /** @var int Asset mint */
+    public const TX_ASSET_MINT = 1102;
+    /** @var int Asset burn */
+    public const TX_ASSET_BURN = 1103;
+    /** @var int Asset status change fee */
+    public const TX_ASSET_STATUS_CHANGE_FEE = 1104;
 }
