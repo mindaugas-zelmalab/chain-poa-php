@@ -1,5 +1,5 @@
 {
-  "name": "forwardblock-io/chain-poa-php",
+  "name": "mindaugas-zelmalab/chain-poa-php",
   "description": "ForwardBlock-PoA Chain Components PHP",
   "type": "library",
   "homepage": "https://github.com/forwardblock-io/chain-poa-php",
@@ -19,7 +19,7 @@
     "ext-bcmath": "*",
     "ext-curl": "*",
     "ext-json": "*",
-    "forwardblock-io/protocol-php": "dev-master"
+    "mindaugas-zelmalab/protocol-php": "dev-master"
   },
   "autoload": {
     "psr-4": {
